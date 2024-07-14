@@ -1,0 +1,20 @@
+parameters:
+  - name: BuildPool
+    type: string
+    default: 'ubuntu-latest'
+
+resources:
+  repositories:
+    - repository: TfTemplates
+      name: andrewtyped/aztf.pipelinetemplates
+      type: github
+      ref: refs/heads/main
+      endpoint: github.com_andrewtyped
+
+extends:
+  template: /tf/tf-azure-pipeline.yml@TfTemplates
+  parameters:
+    BuildPool: ${{ parameters.BuildPool }}
+    AzureArmServiceConnection: rg-primaryvnet-1-deployer
+    DeploymentEnvironment: TfEnv
+    TfPlanApplyArgs: -var "azure_tenant_id=$ENV:ARM_TENANT_ID"
